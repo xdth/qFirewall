@@ -115,6 +115,21 @@ function qfw_rules {
   /sbin/iptables -I OUTPUT -o docker0 -j ACCEPT
   echo "     > Authorize Docker"
 
+  # Node Exporter (9100)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 9100 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9100 -j ACCEPT
+  echo "     > Authorize Node Exporter"
+
+  # Prometheus (9090)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 9090 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9090 -j ACCEPT
+  echo "     > Authorize Prometheus"
+
+  # Grafana (3000)
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 3000 -j ACCEPT
+  # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 3000 -j ACCEPT
+  # echo "     > Authorize Grafana"
+
   # OpenVZ Web Pannel
   # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 3000 -j ACCEPT
   # /sbin/iptables -t filter -A INPUT -p tcp --dport 3000 -j ACCEPT
