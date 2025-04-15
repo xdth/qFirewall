@@ -125,6 +125,16 @@ function qfw_rules {
   /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9090 -j ACCEPT
   echo "     > Authorize Prometheus"
 
+  # Loki (3100)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 3100 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 3100 -j ACCEPT
+  echo "     > Authorize Loki"
+
+  # Promtail (9080)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 9080 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9080 -j ACCEPT
+  echo "     > Authorize Promtail"
+
   # Grafana (3000)
   # /sbin/iptables -t filter -A INPUT -p tcp --dport 3000 -j ACCEPT
   # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 3000 -j ACCEPT
