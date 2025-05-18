@@ -68,14 +68,14 @@ function qfw_rules {
   # HTTP + HTTPS Out
   /sbin/iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
   /sbin/iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
-  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 8000 -j ACCEPT # docker
-  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9443 -j ACCEPT # docker
+  # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 8000 -j ACCEPT # docker
+  # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9443 -j ACCEPT # docker
 
   # HTTP + HTTPS In
   /sbin/iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
   /sbin/iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
-  /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -j ACCEPT # docker
-  /sbin/iptables -t filter -A INPUT -p tcp --dport 9443 -j ACCEPT # docker
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -j ACCEPT # docker
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 9443 -j ACCEPT # docker
   echo "     > Authorize http and https"
 
   # FTP Out
@@ -115,9 +115,9 @@ function qfw_rules {
   /sbin/iptables -I OUTPUT -o docker0 -j ACCEPT
   echo "     > Authorize Docker"
 
-  # Portainer (9443)
-  /sbin/iptables -t filter -A INPUT -p tcp --dport 9443 -j ACCEPT
-  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9443 -j ACCEPT
+  # Portainer (9334)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9334 -j ACCEPT
   echo "     > Authorize Portainer"
 
   # Node Exporter (9100)
