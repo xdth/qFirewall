@@ -116,9 +116,9 @@ function qfw_rules {
   echo "     > Authorize Docker"
 
   # Portainer (9334)
-  /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j ACCEPT
-  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9334 -j ACCEPT
-  echo "     > Authorize Portainer"
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j ACCEPT
+  # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9334 -j ACCEPT
+  # echo "     > Authorize Portainer"
 
   # Node Exporter (9100)
   /sbin/iptables -t filter -A INPUT -p tcp --dport 9100 -j ACCEPT
