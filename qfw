@@ -155,6 +155,13 @@ function qfw_rules {
   # /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -j DROP
   # echo "     > Restrict Portainer Edge Agent to trusted IPs only"
 
+  # LDAP
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 389 -j ACCEPT
+  # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 389 -j ACCEPT
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 636 -j ACCEPT
+  /sbin/iptables -t filter -A OUTPUT -p tcp --dport 636 -j ACCEPT
+  echo "     > Authorize LDAP"
+
   # Node Exporter (9100)
   /sbin/iptables -t filter -A INPUT -p tcp --dport 9100 -j ACCEPT
   /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9100 -j ACCEPT
