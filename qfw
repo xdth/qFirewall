@@ -120,6 +120,24 @@ function qfw_rules {
   # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9334 -j ACCEPT
   # echo "     > Authorize Portainer"
 
+  # Allow specific IPs to NPM Admin (port 81)
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 81 -s 10.10.10.10/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 81 -s 11.11.11.11/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 81 -j DROP
+  # echo "     > Restrict NPM Admin to trusted IPs only"
+
+  # Allow specific IPs to Portainer (direct 9334 access - optional fallback)
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -s 10.10.10.10/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -s 11.11.11.11/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j DROP
+  # echo "     > Restrict direct Portainer access to trusted IPs only"
+
+  # Allow specific IPs to Portainer Edge Agent (if used)
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -s 10.10.10.10/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -s 11.11.11.11/32 -j ACCEPT
+  # /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -j DROP
+  # echo "     > Restrict Portainer Edge Agent to trusted IPs only"
+
   # Node Exporter (9100)
   /sbin/iptables -t filter -A INPUT -p tcp --dport 9100 -j ACCEPT
   /sbin/iptables -t filter -A OUTPUT -p tcp --dport 9100 -j ACCEPT
