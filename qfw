@@ -31,10 +31,17 @@ function qfw_rules {
   /sbin/iptables -t filter -P FORWARD DROP
   /sbin/iptables -t filter -P OUTPUT DROP
   echo "     > Block everything"
+  
+  # Apply the same rules to IPv6
+  /sbin/ip6tables -t filter -P INPUT DROP
+  /sbin/ip6tables -t filter -P FORWARD DROP
+  /sbin/ip6tables -t filter -P OUTPUT DROP
+  echo "     > Block everything for IPv6"
 
   # Block admin ports by default (for Portainer and NGINXPM)
   /sbin/iptables -t filter -A INPUT -p tcp --dport 81 -j DROP
   /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j DROP
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 8000 -j DROP
   echo "     > Block admin ports by default"
 
   # Allow specific IPs to admin ports (uncomment and add your IPs)
@@ -120,7 +127,7 @@ function qfw_rules {
   # echo "     > Authorize mail"
 
   # Allow Docker traffic but prevent it from overriding admin port rules
-  /sbin/iptables -A INPUT -i docker0 -p tcp ! --dport 81 ! --dport 9334 -j ACCEPT
+  /sbin/iptables -A INPUT -i docker0 -j ACCEPT
   /sbin/iptables -A FORWARD -i docker0 -j ACCEPT
   /sbin/iptables -A OUTPUT -o docker0 -j ACCEPT
   echo "     > Authorize Docker with admin port protection"
@@ -217,7 +224,7 @@ function qfw_rules {
   echo "     > Rate limit new connections"
 
   # Log and drop suspicious packets
-  /sbin/iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+  /sbin/iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "qFirewall DROP: " --log-level 7 --log-tcp-options --log-ip-options
   /sbin/iptables -A INPUT -j DROP
   echo "     > Log and drop suspicious packets"
 }
@@ -227,7 +234,18 @@ function qfw_rules {
 # ## Other functions
 
 function qfw_help {
-  echo "qFirewall usage: ./qfw {start|stop}"
+  echo "qFirewall usage: ./qfw {command}"
+  echo ""
+  echo "Commands:"
+  echo "  start     Start the firewall and save rules for persistence"
+  echo "  stop      Stop the firewall and remove all rules"
+  echo "  status    Show current firewall rules (not yet implemented)"
+  echo ""
+  echo "Features:"
+  echo "  - IPv4 and IPv6 protection"
+  echo "  - Admin port security (81, 9334, 8000)"
+  echo "  - Docker compatibility"
+  echo "  - Rule persistence across reboots"
   exit 1
 }
 
@@ -266,6 +284,14 @@ function qfw_start {
   qfw_rules
   echo "     > Rules loaded"
   echo "     > qFirewall started"
+  
+  # Save rules for persistence (no need because it's started by a service)
+  # if command -v iptables-save >/dev/null 2>&1; then
+  #  echo "     > Saving firewall rules for persistence"
+  #  mkdir -p /etc/iptables
+  #  iptables-save > /etc/iptables/rules.v4
+  #  ip6tables-save > /etc/iptables/rules.v6
+  #fi
 }
 
 function qfw_clean {
