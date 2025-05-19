@@ -32,6 +32,16 @@ function qfw_rules {
   /sbin/iptables -t filter -P OUTPUT DROP
   echo "     > Block everything"
 
+  # Block admin ports by default (for Portainer and NGINXPM)
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 81 -j DROP
+  /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j DROP
+  echo "     > Block admin ports by default"
+
+  # Allow specific IPs to admin ports (uncomment and add your IPs)
+  # /sbin/iptables -t filter -I INPUT -p tcp --dport 81 -s 10.10.10.10/32 -j ACCEPT
+  # /sbin/iptables -t filter -I INPUT -p tcp --dport 9334 -s 10.10.10.10/32 -j ACCEPT
+  # echo "     > Allow specific IPs to admin ports"
+
   # Don't break established connections
   /sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
   /sbin/iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
@@ -109,11 +119,11 @@ function qfw_rules {
   # /sbin/iptables -t filter -A OUTPUT -p tcp --dport 995 -j ACCEPT
   # echo "     > Authorize mail"
 
-  # Allow all traffic on the docker0 interface
-  /sbin/iptables -I INPUT -i docker0 -j ACCEPT
-  /sbin/iptables -I FORWARD -i docker0 -j ACCEPT
-  /sbin/iptables -I OUTPUT -o docker0 -j ACCEPT
-  echo "     > Authorize Docker"
+  # Allow Docker traffic but prevent it from overriding admin port rules
+  /sbin/iptables -A INPUT -i docker0 -p tcp ! --dport 81 ! --dport 9334 -j ACCEPT
+  /sbin/iptables -A FORWARD -i docker0 -j ACCEPT
+  /sbin/iptables -A OUTPUT -o docker0 -j ACCEPT
+  echo "     > Authorize Docker with admin port protection"
 
   # Portainer (9334)
   # /sbin/iptables -t filter -A INPUT -p tcp --dport 9334 -j ACCEPT
